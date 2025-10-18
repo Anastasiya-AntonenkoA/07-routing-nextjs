@@ -1,8 +1,13 @@
 import axios from "axios";
-import type { Note } from "../types/note";
+import type { Note, NoteTag } from "../types/note";
 
 const API_URL = "https://notehub-public.goit.study/api";
 const TOKEN = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
+
+interface NoteHttpResponse{
+    notes: Note[];
+    totalPages: number;
+}
 
 const api = axios.create({
   baseURL: API_URL,
@@ -17,15 +22,32 @@ export async function fetchNoteById(id: string): Promise<Note> {
   return response.data;
 }
 
-export async function fetchNotes(
-  page: number,
-  search: string,
-  perPage?: number
-): Promise<{ notes: Note[]; totalPages: number }> {
-  const response = await api.get<{ notes: Note[]; totalPages: number }>("/notes", {
-    params: { page, search, ...(perPage ? { perPage } : {}) },
-  });
-  return response.data;
+// export default async function fetchNotes(
+//   page: number,
+//   search: string,
+//   perPage?: number
+// ): Promise<{ notes: Note[]; totalPages: number }> {
+//   const response = await api.get<{ notes: Note[]; totalPages: number }>("/notes", {
+//     params: { page, search, ...(perPage ? { perPage } : {}) },
+//   });
+//   return response.data;
+// }
+
+export default async function fetchNotes(query: string, page: number, tag?: NoteTag): Promise<NoteHttpResponse> {
+    const response = await axios.get<NoteHttpResponse>("", {
+        params: {
+            search: query,
+            page: page,
+            perPage: 12,
+            tag: tag || undefined,
+        },
+        headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    }
+    )
+    return response.data;
 }
 
 export async function createNote(newNote: {

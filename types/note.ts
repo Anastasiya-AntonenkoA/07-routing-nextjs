@@ -6,3 +6,11 @@ export interface Note {
   createdAt: string;
   updatedAt: string;
 }
+
+export type NoteTag = "" | "Work" | "Personal" | "Meeting" | "Shopping" | "Todo";
+
+export interface CreateNoteHttpResponse {
+    title: string;
+    content: string;
+    tag: NoteTag;
+}
