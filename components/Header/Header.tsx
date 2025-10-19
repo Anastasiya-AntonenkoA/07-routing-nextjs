@@ -1,7 +1,8 @@
 import Link from "next/link";
 import css from "./Header.module.css"
 
-const Header = () => {
+const Header = async () => {
+
   return <header className={css.header}>
   <Link href="/" aria-label="Home">NoteHub</Link>
   <nav aria-label="Main Navigation">

@@ -13,7 +13,7 @@ export default function NoteDetailsClient() {
         enabled: !!id,
         refetchOnMount: false,
     });
-    
+
     if (!id || isLoading) {return <p>Loading, please wait...</p>;}
     if (error || !note) {throw error || new Error("Failed to load note details.");}
 
@@ -27,5 +27,5 @@ export default function NoteDetailsClient() {
                 <p className={css.date}>{new Date(note.createdAt).toLocaleString()}</p>
             </div>
         </div>
-    );
+     );
 }
