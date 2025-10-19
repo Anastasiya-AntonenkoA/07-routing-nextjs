@@ -9,66 +9,54 @@ interface NoteHttpResponse{
     totalPages: number;
 }
 
+interface CreateNotePost {
+  title: string;
+  content: string;
+  tag: NoteTag;
+}
+
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: `${API_URL}/notes`,
   headers: {
+    accept: "application/json",
     Authorization: `Bearer ${TOKEN}`,
-    "Content-Type": "application/json",
   },
 });
 
+export default async function fetchNotes(
+  query: string,
+  page: number,
+  tag?: NoteTag
+): Promise<NoteHttpResponse> {
+  const params: Record<string, string | number>  = {
+    search: query,
+    page,
+    perPage: 12,
+  };
+
+  if (tag) {
+    params.tag = tag;
+  }
+
+  const response = await api.get<NoteHttpResponse>("/", { params });
+  return response.data;
+}
+
+export async function createNote({
+  title,
+  content,
+  tag,
+}: CreateNotePost): Promise<Note> {
+  const response = await api.post<Note>("", { title, content, tag });
+  return response.data;
+}
+
+export async function deleteNote(id: string): Promise<Note> {
+  const response = await api.delete<Note>(`/${id}`);
+  return response.data;
+}
+
 export async function fetchNoteById(id: string): Promise<Note> {
-  const response = await api.get<Note>(`/notes/${id}`);
+  const response = await api.get<Note>(`/${id}`);
   return response.data;
 }
-
-export default async function fetchNotes(query: string, page: number, tag?: NoteTag): Promise<NoteHttpResponse> {
-    const response = await axios.get<NoteHttpResponse>("", {
-        params: {
-            search: query,
-            page: page,
-            perPage: 12,
-            tag: tag || undefined,
-        },
-        headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${TOKEN}`,
-      },
-    }
-    )
-    return response.data;
-}
-
-export async function createNote(newNote: {
-  title: string;
-  content: string;
-  tag: string;
-}): Promise<Note> {
-  const response = await api.post<Note>("/notes", newNote);
-  return response.data;
-}
-
-export const deleteNote = async (id: string): Promise<Note> => {
-    const response = await api.delete<Note>(`/notes/${id}`);
-  return response.data;
-};
-
-// export type Category = {
-//   id: string;
-//   name: string;
-//   description: string;
-//   createdAt: string;
-//   updatedAt: string;
-// };
-
-// export const getCategories = async () => {
-//   const res = await api.get<Category[]>('/categories');
-//   return res.data;
-// };
-
-// export const getNotes = async (tag?: string) => {
-//   const res = await api.get<NoteHttpResponse>('/notes', {
-//     params: { tag },
-//   });
-//   return res.data;
-// };

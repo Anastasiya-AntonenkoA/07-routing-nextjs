@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote } from "../../services/noteService";
 import css from "./NoteForm.module.css";
+import type { NoteTag } from "../../types/note";
 
 interface NoteFormProps {
   onCancel: () => void;
@@ -11,7 +12,7 @@ interface NoteFormProps {
 interface NoteFormValues {
   title: string;
   content: string;
-  tag: "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
+  tag: NoteTag;
 }
 
 const validationSchema = Yup.object({

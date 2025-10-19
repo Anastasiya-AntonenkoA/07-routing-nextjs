@@ -2,21 +2,41 @@ import "./globals.css";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "NoteHub",
+  description: "A simple note management app built with Next.js and React Query",
+};
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <TanStackProvider>
-        <Header />
-          {children}
-          <div id="modal-root"></div>
-          <Footer />
+          <Header />
+            <main>
+              {children}
+              {modal}
+            </main>
+            <Footer />
         </TanStackProvider>
       </body>
     </html>
