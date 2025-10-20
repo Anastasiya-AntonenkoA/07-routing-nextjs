@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
-import { fetchNotes } from "../../../../services/noteService";
+import fetchNotes from "@/lib/api";
+import { NotesClientProps } from "@/types/note";
 import css from "./page.module.css"
 import SearchBox from "../../../../components/SearchBox/SearchBox";
 import Pagination from "../../../../components/Pagination/Pagination";
@@ -13,15 +14,15 @@ import Modal from "../../../../components/Modal/Modal";
 
 const PER_PAGE = 12;
 
-export default function NotesClient() {
+export default function NotesClient({ tag }: NotesClientProps) {
     const [search, setSearch] = useState("");
     const [debouncedSearch] = useDebounce(search, 500);
     const [page, setPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { data, isLoading, isError } = useQuery({
-        queryKey: ["notes", page, debouncedSearch, PER_PAGE],
-        queryFn: () => fetchNotes(page, debouncedSearch, PER_PAGE),
+        queryKey: ["notes", page, debouncedSearch, PER_PAGE, tag],
+        queryFn: () => fetchNotes(debouncedSearch, page, tag ?? undefined),
         placeholderData: (prev) => prev,
     }); 
     
@@ -36,15 +37,15 @@ export default function NotesClient() {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox value={search} onChange={handleSearchChange} />
-        {totalPages > 1 && (
-          <Pagination
-            totalPages={totalPages}
-            page={page}
-            onChange={setPage}
-          />
-        )}
-        <button className={css.button} onClick={() => setIsModalOpen(true)}>Create note</button>
+          <SearchBox value={search} onChange={handleSearchChange} />
+          {totalPages > 1 && (
+              <Pagination
+                  totalPages={totalPages}
+                  page={page}
+                  onChange={setPage}
+              />
+          )}
+          <button className={css.button} onClick={() => setIsModalOpen(true)}>Create notes</button>
       </header>
 
       {isLoading && <p>Loading...</p>}
