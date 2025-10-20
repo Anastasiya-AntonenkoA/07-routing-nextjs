@@ -10,8 +10,8 @@ type Props = {
 const PER_PAGE = 12;
 
 const NotesByCategory = async ({ params }: Props) => {
-    const { slug } = params;
-    const tag = slug[0] === 'all' ? null : slug[0];
+    const { slug } = await params;
+    const tag = slug[0].toLowerCase() === 'all' ? null : slug[0];
     const tagForFetch = tag === null ? undefined : (tag as NoteTag);
     const queryClient = new QueryClient();
     const searchWord = "";
