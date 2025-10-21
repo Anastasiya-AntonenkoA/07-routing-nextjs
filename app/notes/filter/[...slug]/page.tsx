@@ -33,3 +33,4 @@ const NotesByCategory = async ({ params }: Props) => {
 };
 
 export default NotesByCategory;
+//test
