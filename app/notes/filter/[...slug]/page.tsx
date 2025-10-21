@@ -4,7 +4,7 @@ import fetchNotes from "@/lib/api";
 import NotesClient from "./Notes.client";
 
 type Props = {
-  params: { slug: string[] };
+  params: Promise<{ slug: string[] }>;
 };
 
 const PER_PAGE = 12;
