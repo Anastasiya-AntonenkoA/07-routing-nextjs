@@ -12,8 +12,6 @@ import NoteList from "../../../../components/NoteList/NoteList";
 import NoteForm from "../../../../components/NoteForm/NoteForm";
 import Modal from "../../../../components/Modal/Modal";
 
-const PER_PAGE = 12;
-
 export default function NotesClient({ tag }: NotesClientProps) {
     const [search, setSearch] = useState("");
     const [debouncedSearch] = useDebounce(search, 500);
@@ -21,7 +19,7 @@ export default function NotesClient({ tag }: NotesClientProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { data, isLoading, isError } = useQuery({
-        queryKey: ["notes", page, debouncedSearch, PER_PAGE, tag],
+        queryKey: ["notes", page, debouncedSearch, tag],
         queryFn: () => fetchNotes(debouncedSearch, page, tag ?? undefined),
         placeholderData: (prev) => prev,
     }); 
